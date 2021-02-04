@@ -14,7 +14,7 @@ function writePassword() {
 generateBtn.addEventListener("click", writePassword);
 
 function generatePassword() {
-  let password = {
+  const password = {
     passString: "",
     pLength: 0,
     isLower: false,
@@ -33,11 +33,10 @@ function generatePassword() {
   };
 
   var i = 0;
-  var type = ["lowercase", "uppercase", "numeric", "special"];
-  var passType = ["isLower", "isUpper", "isNum", "isSpec"];
-  var typeMsg = "Would you like to include " + type(i) + " characters?";
+  const charType = ["lowercase", "uppercase", "numeric", "special"];
+  const passType = ["isLower", "isUpper", "isNum", "isSpec"];
   var valid = false;
-  var characters = {
+  const characters = {
     lower: [97, 122],
     upper: [65, 90],
     numeric: [48, 57],
@@ -47,27 +46,29 @@ function generatePassword() {
   do {
     // Prompts for password length
     var passLength = prompt("Enter a password length between 8 and 128 characters.");
+    // console.log(passLength + ": Line 50");
     // Validates user entered length
     if (passLength) {
-      if (passLength.length >= 8 && passLength.length <= 128) {
+      if (passLength >= 8 && passLength <= 128) {
         password.pLength = passLength;
         valid = true;
+        // console.log("Line 56");
       }
     }
   } while(valid !== true);
 
 
   alert("From the following, please choose at least one (1) type of character.")
-  
   // Prompts for character types to include
   while(!password.hasTrue()) {
     for (var i=0; i < 4; i++) {
-      password.passType(i) = confirm(typeMsg);
+      password[passType[i]] = confirm("Would you like to include " + charType[i] + " characters?");
     }
   }
 
   let counter = 0;
-  var type = [];
+  // Used for switch case to generate a random type of character
+  const type = [];
 
   // Adds one of each selected types of characters to the password object's passString
   if (password.isLower) {
@@ -87,7 +88,7 @@ function generatePassword() {
   }
   if (password.isSpec) {
     var specLength = characters.special.length;
-    password.passString += String.fromCharCode(getRanNum(0, specLength - 1));
+    password.passString += String.fromCharCode(characters.special[getRanNum(0, specLength - 1)]);
     type.push("special");
     counter++;
   }
@@ -98,17 +99,17 @@ function generatePassword() {
 
     // Switch case to add random character to passString
     switch (type[newTypeNum]) {
-      case lower:
+      case "lower":
         password.passString += String.fromCharCode(getRanNum(characters.lower[0], characters.lower[1]));
         break;
-      case upper:
+      case "upper":
         password.passString += String.fromCharCode(getRanNum(characters.upper[0], characters.upper[1]));
         break;
-      case numeric:
+      case "numeric":
         password.passString += String.fromCharCode(getRanNum(characters.numeric[0], characters.numeric[1]));
         break;
-      case special:
-        password.passString += String.fromCharCode(getRanNum(0, specLength - 1));
+      case "special":
+        password.passString += String.fromCharCode(characters.special[getRanNum(0, specLength - 1)]);
         break;
     }
   } return password.passString; // temporary, would like to shuffle
