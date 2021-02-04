@@ -14,14 +14,8 @@ function writePassword() {
 generateBtn.addEventListener("click", writePassword);
 
 function generatePassword() {
-  // const type = {
-  //   lowecase: 0,
-  //   uppercase: 1,
-  //   numerica: 2,
-  //   special: 3
-  // };
   let password = {
-    password: "",
+    passString: "",
     pLength: 0,
     isLower: false,
     isUpper: false,
@@ -37,17 +31,24 @@ function generatePassword() {
       }
     }
   };
+
   var i = 0;
   var type = ["lowercase", "uppercase", "numeric", "special"];
   var passType = ["isLower", "isUpper", "isNum", "isSpec"];
   var typeMsg = "Would you like to include " + type(i) + " characters?";
   var valid = false;
+  var characters = {
+    lower: [97, 122],
+    upper: [65, 90],
+    numeric: [48, 57],
+    special: [33,35,36,37,39,40,41,43,44,45,46,47,58,63,64,91,92,93,94,95,123,125,126]
+  };
 
   do {
     // Prompts for password length
     var passLength = prompt("Enter a password length between 8 and 128 characters.");
     // Validates user entered length
-    if (typeof(passLength) === 'string') {
+    if (passLength) {
       if (passLength.length >= 8 && passLength.length <= 128) {
         password.pLength = passLength;
         valid = true;
@@ -58,14 +59,70 @@ function generatePassword() {
 
   alert("From the following, please choose at least one (1) type of character.")
   
-  for (i=0; i < 4; i++) {
-    password.passType(i) = confirm(typeMsg);
+  // Prompts for character types to include
+  while(!password.hasTrue()) {
+    for (var i=0; i < 4; i++) {
+      password.passType(i) = confirm(typeMsg);
+    }
   }
-  
-  
 
+  let counter = 0;
+  var type = [];
+
+  // Adds one of each selected types of characters to the password object's passString
+  if (password.isLower) {
+    password.passString += String.fromCharCode(getRanNum(characters.lower[0], characters.lower[1]));
+    type.push("lower");
+    counter++;
+  }
+  if (password.isUpper) {
+    password.passString += String.fromCharCode(getRanNum(characters.upper[0], characters.upper[1]));
+    type.push("upper");
+    counter++;
+  }
+  if (password.isNum) {
+    password.passString += String.fromCharCode(getRanNum(characters.numeric[0], characters.numeric[1]));
+    type.push("numeric");
+    counter++;
+  }
+  if (password.isSpec) {
+    var specLength = characters.special.length;
+    password.passString += String.fromCharCode(getRanNum(0, specLength - 1));
+    type.push("special");
+    counter++;
+  }
+
+  var neededChars = password.pLength - counter;
+  for (var i = 0; i < neededChars; i++) {
+    var newTypeNum = getRanNum(0, counter - 1); // randomly chooses a type of chosen characters
+
+    // Switch case to add random character to passString
+    switch (type[newTypeNum]) {
+      case lower:
+        password.passString += String.fromCharCode(getRanNum(characters.lower[0], characters.lower[1]));
+        break;
+      case upper:
+        password.passString += String.fromCharCode(getRanNum(characters.upper[0], characters.upper[1]));
+        break;
+      case numeric:
+        password.passString += String.fromCharCode(getRanNum(characters.numeric[0], characters.numeric[1]));
+        break;
+      case special:
+        password.passString += String.fromCharCode(getRanNum(0, specLength - 1));
+        break;
+    }
+  } return password.passString; // temporary, would like to shuffle
+
+
+  function getRanNum(min, max) {
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min + 1) + min);
+  }
 
 }
+
+
 
 /* Don't forget
   PROMPT  - user entry
