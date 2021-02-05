@@ -32,10 +32,12 @@ function generatePassword() {
     }
   };
 
-  var i = 0;
+
+  // Variables to make things a bit easier/cleaner
   const charType = ["lowercase", "uppercase", "numeric", "special"];
   const passType = ["isLower", "isUpper", "isNum", "isSpec"];
   var valid = false;
+  // ASCII character codes
   const characters = {
     lower: [97, 122],
     upper: [65, 90],
@@ -43,29 +45,27 @@ function generatePassword() {
     special: [33,35,36,37,39,40,41,43,44,45,46,47,58,63,64,91,92,93,94,95,123,125,126]
   };
 
+  // Prompts for password length then validates
   do {
-    // Prompts for password length
     var passLength = prompt("Enter a password length between 8 and 128 characters.");
-    // console.log(passLength + ": Line 50");
-    // Validates user entered length
     if (passLength) {
       if (passLength >= 8 && passLength <= 128) {
         password.pLength = passLength;
         valid = true;
-        // console.log("Line 56");
       }
     }
   } while(valid !== true);
 
 
-  alert("From the following, please choose at least one (1) type of character.")
-  // Prompts for character types to include
+  // Confirms which character types to include
   while(!password.hasTrue()) {
+    alert("From the following, please choose at least one (1) type of character.");
     for (var i=0; i < 4; i++) {
       password[passType[i]] = confirm("Would you like to include " + charType[i] + " characters?");
     }
   }
 
+  // keeps track of how many types of characters were selected
   let counter = 0;
   // Used for switch case to generate a random type of character
   const type = [];
@@ -93,7 +93,9 @@ function generatePassword() {
     counter++;
   }
 
+  // Calculates how many more characters are still needed
   var neededChars = password.pLength - counter;
+  // Gets the remaining needed characters
   for (var i = 0; i < neededChars; i++) {
     var newTypeNum = getRanNum(0, counter - 1); // randomly chooses a type of chosen characters
 
@@ -112,54 +114,29 @@ function generatePassword() {
         password.passString += String.fromCharCode(characters.special[getRanNum(0, specLength - 1)]);
         break;
     }
-  } return password.passString; // temporary, would like to shuffle
+  } 
+  
+  shuffleString(password.passString);
+  return password.passString;
 
 
+  // Returns a random number between a range (inclusively)
   function getRanNum(min, max) {
     min = Math.ceil(min);
     max = Math.floor(max);
     return Math.floor(Math.random() * (max - min + 1) + min);
   }
+  // Converts password string to array; shuffles array; reassigns shuffled array as string
+  function shuffleString(basic) {
+    var tempArr = basic.split("");
+    for(let a = basic.length - 1; a > 0; a--) {
+      let b = Math.floor(Math.random() * a);
+      const temp = tempArr[a];
+      tempArr[a] = tempArr[b];
+      tempArr[b] = temp;
+    }
+    // Converts array to string with no separation and sets to password's passString attribute
+    password.passString = tempArr.join("");
+  }
 
 }
-
-
-
-/* Don't forget
-  PROMPT  - user entry
-  CONFIRM - T/F
-  ALERT   - message
-*/
-
-/*
-
-Scratch
-
-After click, prompt for password criteria
-  1) PROMPT FOR:
-      A) length ----> RECEIVE (8-128 characters)
-      B) character types ----> RECEIEVE (lowercase, uppercase, numeric, and/or special char) **min of 1 type**
-  2) VALIDATE
-  3) GENERATE
-  4) DISPLAY (alert or written to page)
-
-******************************************************
-
-Instructions:
-
-GIVEN I need a new, secure password
-WHEN I click the button to generate a password
-THEN I am presented with a series of prompts for password criteria
-WHEN prompted for password criteria
-THEN I select which criteria to include in the password
-WHEN prompted for the length of the password
-THEN I choose a length of at least 8 characters and no more than 128 characters
-WHEN prompted for character types to include in the password
-THEN I choose lowercase, uppercase, numeric, and/or special characters
-WHEN I answer each prompt
-THEN my input should be validated and at least one character type should be selected
-WHEN all prompts are answered
-THEN a password is generated that matches the selected criteria
-WHEN the password is generated
-THEN the password is either displayed in an alert or written to the page
-*/
