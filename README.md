@@ -1,4 +1,4 @@
-# hw3-JS_Password_Generator
+# Password_Generator
 
 ## Description
     This is a **JavaScript** powered Password Generator. It prompts the users for *length* they  
@@ -11,4 +11,4 @@
    ![Password Generator Screenshot](Assets/03-javascript-homework-demo.png)
 
 ## Site Link
-   Link to [Password Generator](https://takolad.github.io/hw3-JS_Password_Generator/).
+   Link to [Password Generator](https://takolad.github.io/Password_Generator/).
